@@ -39,6 +39,7 @@ addBtn.addEventListener('click',function(element){
     showNotes();
 })
 
+
 // Function to show element from localStorage
 function showNotes(){
 
@@ -60,7 +61,7 @@ function showNotes(){
                 <h5 class="card-title">${element.title}</h5>
                 <p class="card-text">${element.text}</p>
                 <button onclick="editNote(${index})" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> Edit</button>
-                <button id="${index}" onclick="deleteNote(this.id)" class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete</button>
+                <a id="${index}" onclick="deleteNote(this.id)" class="btn text-white btn-danger"><i class="fa fa-trash-o"></i> Delete</a>
             </div>
         </div>
         `;
@@ -79,7 +80,7 @@ function showNotes(){
         notesElm.innerHTML = `Nothing to show! Use "Add a Note" section above to add notes.`;
     }
 }
-
+let deleteIndex;
 // Function to edit a note 
 function editNote(index){
     // console.log("hi",index);
@@ -109,18 +110,21 @@ function editNote(index){
     let editBtn = document.getElementById('editBtn');
     // store note index value to edit button by using data-target attribute because when i edited text save to localStorage at that time i need the index number 
     editBtn.setAttribute('data-target',index);
+    
     let addBtn = document.getElementById('addBtn');
 
     // set condition when i click on edit note button then main form add note button is hide and edit button is show
     editBtn.style.display = "block";
     addBtn.style.display = "none";
-    // console.log(notesObj[index]);
 
+    deleteIndex = editBtn.getAttribute('data-target');
+    // console.log(editIndex);
 }
 
 // get referance of edit button of main form
 let editBtn = document.getElementById('editBtn');
 editBtn.addEventListener('click',function(){
+    deleteIndex = null;
 
     // get referance all input field and index number 
     let addTxt = document.getElementById('addTxt');
@@ -135,7 +139,7 @@ editBtn.addEventListener('click',function(){
     }else{
         notesObj = JSON.parse(notes);
     }
-
+   
     // delete old note because at this index number store new edited note
     deleteNote(editIndex);
 
@@ -162,12 +166,13 @@ editBtn.addEventListener('click',function(){
     document.getElementById('addTxt').value="";
     document.getElementById('addTitle').value="";
 
+    
 })
 
 // Function to delete a note from localStorage
 function deleteNote(index){
     // console.log("hi",index);
-
+    
     let notes = localStorage.getItem('JDNotesTakingApp');
     if(notes == null){
         notesObj = [];
@@ -175,8 +180,12 @@ function deleteNote(index){
         notesObj = JSON.parse(notes);
     }
 
-    // delete note when user click delete button using note index number
-    notesObj.splice(index,1);
+    if(deleteIndex == null){
+        // delete note when user click delete button using note index number
+        notesObj.splice(index,1);
+    }
+   
+
     // again update localStorage
     localStorage.setItem('JDNotesTakingApp',JSON.stringify(notesObj));
     // call showNotes function for whatever update is accur in localStorage is show
