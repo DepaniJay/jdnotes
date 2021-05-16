@@ -9,6 +9,19 @@ addBtn.addEventListener('click',function(element){
     let addTxt = document.getElementById('addTxt');
     let addTitle = document.getElementById('addTitle');
 
+    if(addTxt.value =='' || addTitle.value ==''){
+        showError("danger","Please enter valid details.");
+    }else{
+        addNotes();
+    }
+
+})
+
+function addNotes(){
+    // Get data when user click add note button
+    let addTxt = document.getElementById('addTxt');
+    let addTitle = document.getElementById('addTitle');
+
     // Retraive data from the localStorage 
     let notes = localStorage.getItem('JDNotesTakingApp');
     // if data is null then create new array
@@ -37,8 +50,25 @@ addBtn.addEventListener('click',function(element){
 
     // after add new note to localStorage call function to see all notes with new updated note
     showNotes();
-})
+}
 
+function showError(type,msg){
+    let message = document.getElementById('message');
+    let messageType;
+    if(type === "danger"){
+        messageType = "Error";
+    }
+    let messageHtml = `
+    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+        <strong>${messageType} Message:</strong> ${msg}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    `;
+    message.innerHTML = messageHtml;
+    setTimeout(()=>{
+        message.innerHTML = '';
+    },5000);
+}
 
 // Function to show element from localStorage
 function showNotes(){
